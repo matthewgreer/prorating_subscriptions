@@ -40,6 +40,8 @@ const monthlyCharge = (month, subscription, users) => {
   const totalDaysInMonth = (firstOfNextMonthInMS - firstDayOfMonthInMS) / millisecondsInOneDay;
   const monthlyCost = subscription.monthlyPriceInCents;
   const dailyCost = Math.ceil(monthlyCost / totalDaysInMonth); // round up to the nearest cent.
+  console.log('==============================================')
+  console.log("Monthly rate: ", monthlyCost, '. Days in month: ', totalDaysInMonth, '. Daily rate:', dailyCost)
 
 
   let totalCost = 0; // in cents, remember!
@@ -119,5 +121,9 @@ module.exports = monthlyCharge;
     lastDayOfMonth = new Date(0); => Date obj Jan 1 1970 00:00:000 UTC
     lastDayOfMonth.setUTCMilliseconds(lastDayOfMonthMS); => Date obj Dec 31 2020 00:00:000 UTC
 
-    So now we have UTC Date Objects for first and last days of the month. But subtracting, adding, comparing etc of Date objects is just using ms anyway (and will return ms). Looks like it might be better to just use ms for the whole shebang.
+    So now we have UTC Date Objects for first and last days of the month. But subtracting, adding, comparing etc of Date objects is just using ms anyway (and will return ms).
+
+    *** Looks like it might be better to just use ms for the whole shebang. ***
+
+    One interesting conundrum is that due to rounding with the daily rate, one could actually be charged slightly more than the monthly rate for 2 users with a combined total of days equal to the total days in the month. How would you address that? Total days % number of days in the month? If it's an exact multiple (=== 0), charge (total days/number of days in the month) * monthly rate?
   */
