@@ -133,6 +133,6 @@ const users6 = [
   },
 ];
 
-test('returns 3007 for 2 users, one starting and one deactivating halfway through 30 day month', () => {
-  expect(monthlyCharge(date2, subscription1, users6)).toBe(3007);
+test('returns 3000, not 3007, for 2 users, one starting and one deactivating halfway through 31 day month, with 31 total days', () => {
+  expect(monthlyCharge(date2, subscription1, users6)).toBe(3000);
 });

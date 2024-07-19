@@ -41,9 +41,10 @@ const monthlyCharge = (month, subscription, users) => {
   const monthlyCost = subscription.monthlyPriceInCents;
   const dailyCost = Math.ceil(monthlyCost / totalDaysInMonth); // round up to the nearest cent.
   console.log('==============================================')
-  console.log("Monthly rate: ", monthlyCost, '. Days in month: ', totalDaysInMonth, '. Daily rate:', dailyCost)
+  console.log('Monthly rate: ', monthlyCost, '. Days in month: ', totalDaysInMonth, '. Daily rate:', dailyCost)
 
 
+  let totalDays = 0;
   let totalCost = 0; // in cents, remember!
 
   for (const user of users) {
@@ -54,9 +55,10 @@ const monthlyCharge = (month, subscription, users) => {
 
     if (activatedOnInMS < firstDayOfMonthInMS && deactivatedOnInMS >= firstOfNextMonthInMS) {
       // if the user activated before the month started AND did not deactivate before the beginning of next month, save the caculations, just charge the full monthly charge and move on.
+      totalDays += totalDaysInMonth;
       totalCost += monthlyCost;
 
-    console.log(user.name, "charged for entire month. Subtotal: ", monthlyCost, ". Total Cost: ", totalCost);
+    console.log(user.name, 'charged for entire month. Subtotal: ', monthlyCost, '. Total Days: ', totalDays, '. Total Cost: ', totalCost);
       continue;
     }
 
@@ -68,9 +70,15 @@ const monthlyCharge = (month, subscription, users) => {
 
     const userCost = (userChargedDays * dailyCost);
 
+    totalDays += userChargedDays;
     totalCost += userCost;
 
-    console.log(user.name, "charged for ", userChargedDays, "days at ", dailyCost, "per day. Subtotal: ", userCost, ". Total Cost: ", totalCost);
+    console.log(user.name, 'charged for ', userChargedDays, 'days at ', dailyCost, 'per day. Subtotal: ', userCost, '. Total Days: ', totalDays, '. Total Cost: ', totalCost);
+  }
+
+  if (totalDays % totalDaysInMonth === 0) {
+    totalCost = totalDays / totalDaysInMonth * monthlyCost;
+    console.log('Total Days is a multiple of # of days in month. Adjusting Total Cost to eliminate rounding creep.', totalCost)
   }
 
   return totalCost;
